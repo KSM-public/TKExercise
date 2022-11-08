@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,12 +22,14 @@ namespace TKExercise
     public partial class MainWindow : Window
     {
         SQLServerConnection serverConnection;
+        DataTable columnsDetails;
 
         public MainWindow()
         {
             InitializeComponent();
 
             serverConnection = new SQLServerConnection();
+            columnsDetails = new DataTable();
         }
 
         //Disable loading data if it's not already disabled
@@ -38,6 +41,7 @@ namespace TKExercise
             }
         }
 
+        //Check for connection and enable loading data button if it's valid
         private void ButtonCheckConnection_Click(object sender, RoutedEventArgs e)
         {
             serverConnection.SetConnectionDetails(TextHost.Text, TextUser.Text, TextPassword.Password);
@@ -68,7 +72,16 @@ namespace TKExercise
 
         private void LoadDataButton_Click(object sender, RoutedEventArgs e)
         {
+            //Try load data and exit if there was an error
+            if (!serverConnection.GetIntColumnsDetails())
+            {
+                MessageBox.Show("Wystąpił błąd podczas ładowania danych: " + serverConnection.ErrorMessage, "Błąd");
+                return;
+            }
 
+            //Get response to the local DataTable and put it in DataGrid
+            columnsDetails = serverConnection.SqlResponse; 
+            DataGridMain.DataContext = columnsDetails.DefaultView;
         }
     }
 }

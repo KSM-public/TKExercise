@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace TKExercise
 {
@@ -14,7 +15,11 @@ namespace TKExercise
         string connectionString; //Connection string
         string errorMessage; //Contains error message
 
+        DataTable sqlResponse;
+
         public string ErrorMessage { get => errorMessage; }
+
+        public DataTable SqlResponse { get => sqlResponse; }
 
         //Disable warning that warns about non nullable field that must contain non null variable when exiting constructor
         //These fields are initialized in separate method but warning still occurs so disable it for clarity
@@ -54,8 +59,7 @@ namespace TKExercise
                 return false;
             }
 
-            SqlConnection connection;
-            connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(connectionString);
 
             try 
             { 
@@ -69,6 +73,42 @@ namespace TKExercise
             finally
             {
                 connection.Close();
+            }
+
+            return true;
+        }
+
+        //Get details about int columns in tables
+        public bool GetIntColumnsDetails()
+        {
+            //Check if connection is valid before attempting to load data
+            if (!TryConnect())
+            {
+                return false;
+            }
+
+            string query = "SELECT TABLE_NAME,COLUMN_NAME,DATA_TYPE,* FROM INFORMATION_SCHEMA.COLUMNS WHERE INFORMATION_SCHEMA.COLUMNS.DATA_TYPE = 'int'";
+
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(query, connection);
+            SqlDataAdapter data = new SqlDataAdapter(command);
+
+            sqlResponse = new DataTable();
+
+            try
+            {
+                connection.Open();
+                data.Fill(sqlResponse); //Put response to the DataTable
+            }
+            catch (SqlException ex)
+            {
+                errorMessage = ex.Message;
+                return false;
+            }
+            finally
+            {
+                connection.Close();
+                data.Dispose();
             }
 
             return true;

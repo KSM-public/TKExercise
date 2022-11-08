@@ -43,6 +43,6 @@
             <Button x:Name="LoadDataButton" Grid.Column="2" Grid.Row="2" Content="Załaduj dane" IsEnabled="False" Click="LoadDataButton_Click" />
         </Grid>
 
-        <DataGrid></DataGrid>
+        <DataGrid x:Name="DataGridMain" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding}" />
     </DockPanel>
 </Window>
