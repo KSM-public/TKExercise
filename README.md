@@ -1,0 +1,2 @@
+# Description
+This is an simple C# application with WPF GUI that connects to the SQL Server database and display details about int type fields in all tables that are part of database. GUI lets user enter database connection details (like host, user and password), check if connection can be established (if not message box with error is displayed) then load details about int fields in tables into WPF DataGrid. Data from SQL Server is loaded into DataTable that is used as data source for DataGrid.
