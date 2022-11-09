@@ -87,7 +87,7 @@ namespace TKExercise
                 return false;
             }
 
-            string query = "SELECT TABLE_NAME,COLUMN_NAME,DATA_TYPE,* FROM INFORMATION_SCHEMA.COLUMNS WHERE INFORMATION_SCHEMA.COLUMNS.DATA_TYPE = 'int'";
+            string query = "SELECT COLUMN_NAME, TABLE_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE INFORMATION_SCHEMA.COLUMNS.DATA_TYPE = 'int'";
 
             SqlConnection connection = new SqlConnection(connectionString);
             SqlCommand command = new SqlCommand(query, connection);
